@@ -1,4 +1,3 @@
-![Image](https://www.google.com/search?q=netflix+twitter+covid&sxsrf=ALeKk01I_TRyYks6IS1jVLN1tFd_tdvD7A:1607460326894&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjr_piuoL_tAhWgCRAIHT0sCfMQ_AUoAXoECAQQAw&biw=1440&bih=789#imgrc=6U79JK11svwK4M)
 
 #                                                   Twitter Data Analysis: Netflix growth in a COVID-19 world
 
