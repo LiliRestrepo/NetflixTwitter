@@ -17,6 +17,11 @@ Our objective for this project is to analyze tweets related to Netflix in order 
 ## Collecting Data
 The first step was to get access to Twitter API and then get our keys in order to create a code that could constantly pull out data from Twitter within the past 7 days from the code beign ran. Afterwards, we were able to clean the data. Since is a trending topic, the tweets have too many @ and # that maybe won't be helpful on our analysis, therefore we needed to filter our data in order to find just the tweets that would be helpful for our analysis. Finally, we will extract the show ‘s names to analyze the sentiment of each show and the overall polarity on the different opinions. We searched for keyphrases like #SelenaNetflix, #Selena, #BigMouth, #BigMouthNetflix, #VirginRiver, #PeppermintNetflix, #TheCrown, #TheCrownNetflix, #TheQueensGambit, #TheQueensGambitNetflix, #Marauders, #AlienWorld, #TheChristmasChronicles, and #TheGrinch. We also looked focused to look at more general tweets to make sure we gathered tweets about the shows beign watched from the platform we are interested in, like #Netflix, #NetflixShows #NetflixOriginals, #NetflixandChill, #QuarantineandChill and analyze if the tweets obtained are positively or negatively related to Netflix.
 
+# Tweets Origin
+## Organic Tweets or Replies?
+
+## Most Frequent Words
+
 # Top 10 Netflix Shows and Movies in USA
 *Saturday, Dec 5th, 2020:* 
 
@@ -37,8 +42,8 @@ We started by pulling data from the latest 7 days of Twitter activity. Looking f
 ## Statistical and Predictive Analysis 
 For uncovering patterns and trends, make predictions and test our hypothesis, the following statistical and predictive models were used in our analysis:
 
-* Logistic Regresion
 * Logistic Model
+* Logistic Regresion
 * CTree
 * CART
 * Naive Bayes
@@ -47,3 +52,11 @@ For uncovering patterns and trends, make predictions and test our hypothesis, th
 
 # Text Sentiment
 - Text and sentiment analysis using Voson package
+
+# Logistic Model
+## Logistic Regression
+* In this analysis, we will classify Top 5 and Bottom 5 shows using logistic regression.
+
+* Question: Given a Favorite Count and Number of followers, classify a tweet to be part of the Top 5 or the Bottom 5 shows, considering the Top10 of saturday 5th:
+
+#
