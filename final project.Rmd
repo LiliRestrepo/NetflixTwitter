@@ -1,0 +1,482 @@
+---
+title: "Final Project"
+output: html_notebook
+---
+
+```{r}
+# Load Libraries 
+library(tidyverse)
+library(RMySQL)
+library(odbc)
+library(DBI)
+library(rtweet)
+library(ggplot2)
+library(lda)
+library(reshape2)
+
+library(jsonlite)
+library(stringr)
+library(tm)
+library(quanteda)
+library(forestmangr)
+library(dplyr)
+library(janeaustenr)
+library(tidytext)
+
+library(wordcloud)
+library(RColorBrewer)
+library(wordcloud2)
+
+library("devtools")
+library("memoise")
+library("whisker")
+library("rstudioapi")
+library("git2r")
+library("withr")
+library("rjson")
+library("bit64")
+library ("httr")
+library ("httpuv")
+library("base64enc")
+library("twitteR")
+library("ROAuth")
+```
+
+# import data
+load documents and vocabulary
+```{r}
+data("cora.documents")
+data("cora.vocab")
+```
+
+
+```{r}
+tweets <- as_tibble(HT_netflix)
+tweets
+```
+
+```{r}
+SelenaCount <- sum(str_detect(tweets$text, "Selena Netflix"))
+
+cat("Number of tweets with 'Selena Netflix':", SelenaCount, "\n")
+
+SelenaorNetflix <- sum(str_detect(
+  tweets$text,
+  "Selena Netflix|selena netflix"
+))
+
+cat("Number of tweets with 'selena netflix' or 'Selena Netflix':", SelenaorNetflix)
+
+```
+
+```{r}
+BigMouthCount <- sum(str_detect(tweets$text, "Big Mouth"))
+
+cat("Number of tweets with 'Big Mouth':", BigMouthCount, "\n")
+
+BigMouthorNetflix <- sum(str_detect(
+  tweets$text,
+  "Big Mouth| Big Mouth Netflix | Big Mouth Season 4"
+))
+
+cat("Number of tweets with 'Big Mouth' or 'Big Mouth Netflix' or 'Big Mouth Season 4':", BigMouthorNetflix)
+```
+
+```{r}
+QGCount <- sum(str_detect(tweets$text, "The Queens Gambit"))
+
+cat("Number of tweets with 'The Queens Gambit':", QGCount, "\n")
+
+QGorNetflix <- sum(str_detect(
+  tweets$text,
+  "The Queens Gambit| The queens gambit netflix"
+))
+
+cat("Number of tweets with 'The Queens Gambit' or 'The queens gambit netflix':", QGorNetflix)
+```
+
+```{r}
+GrinchCount <- sum(str_detect(tweets$text, "The Grinch"))
+
+cat("Number of tweets with 'The Grinch':", GrinchCount, "\n")
+
+GrinchorNetflix <- sum(str_detect(
+  tweets$text,
+  "The Grinch | The Grinch Netflix'"
+))
+
+cat("Number of tweets with 'The Grinch' or 'The Grinch Netflix':", GrinchorNetflix)
+```
+
+```{r}
+CrownCount <- sum(str_detect(tweets$text, "The Crown Netflix"))
+
+cat("Number of tweets with 'The Crown Netflix':", CrownCount, "\n")
+
+CrownorNetflix<- sum(str_detect(
+  tweets$text,
+  "The Crown Netflix|The Crown"
+))
+
+cat("Number of tweets with 'The Crown Netflix' or 'The Crown':", CrownorNetflix)
+```
+
+```{r}
+PeppermintCount <- sum(str_detect(tweets$text, "Peppermint Netflix"))
+
+cat("Number of tweets with 'Peppermint Netflix':", PeppermintCount, "\n")
+
+PeppermintorNetflix<- sum(str_detect(
+  tweets$text,
+  "Peppermint Netflix | peppermint netflix"
+))
+
+cat("Number of tweets with 'Peppermint Netflix' or 'peppermint netflix':", PeppermintorNetflix)
+```
+
+```{r}
+CCCount <- sum(str_detect(tweets$text, "The Christmas Chronicles Netflix"))
+
+cat("Number of tweets with 'The Christmas Chronicles Netflix':", CCCount, "\n")
+
+CCorNetflix<- sum(str_detect(
+  tweets$text,
+  "The Christmas Chronicles Netflix | The Christmas Chronicles"
+))
+
+cat("Number of tweets with 'The Christmas Chronicles Netflix' or 'The Christmas Chronicles':", CCorNetflix)
+```
+
+# how many hashtags?
+
+```{r}
+sum(str_detect(
+  tweets$text, '#')
+)
+
+```
+
+# How many mentions?
+
+```{r}
+sum(str_detect(
+  tweets$text, '@')
+)
+
+```
+
+# creating a Corpus
+
+```{r}
+tweetCorpus <- Corpus(VectorSource(
+  tweets$text
+))
+
+tweetTDM <- TermDocumentMatrix(
+  tweetCorpus
+)
+
+inspect(tweetTDM)
+```
+# Document feature Matrix (DFM)
+this will make sure we only have the significant words
+
+```{r}
+tweetDFM <- dfm(tweets$text,
+                remove_punct = TRUE,
+                remove = stopwords("english"))
+```
+
+#Top Features
+```{r}
+topfeatures(tweetDFM)
+```
+
+#weight frequncy 
+
+Now we have structured data to work with  
+
+```{r}
+textstat_frequency(tweetDFM)
+```
+# selecting #shows
+
+```{r}
+sum(str_detect(
+  tweets$text, 'Selena Netflix')
+)
+
+SelenaTweets <- 
+  subset(tweets,
+         str_detect(
+           text,
+           regex('selena netflix',
+                 ignore_case = TRUE)
+         ))
+
+
+head(select(SelenaTweets, text))
+```
+
+```{r}
+sum(str_detect(
+  tweets$text, 'Big Mouth')
+)
+
+BMTweets <- 
+  subset(tweets,
+         str_detect(
+           text,
+           regex('Big Mouth',
+                 ignore_case = TRUE)
+         ))
+
+
+head(select(BMTweets, text))
+```
+
+```{r}
+sum(str_detect(
+  tweets$text, 'The Crown')
+)
+
+TheCrownTweets <- 
+  subset(tweets,
+         str_detect(
+           text,
+           regex('The Crown',
+                 ignore_case = TRUE)
+         ))
+
+
+head(select(TheCrownTweets, text))
+```
+
+```{r}
+sum(str_detect(
+  tweets$text, 'The Grinch')
+)
+
+GrinchTweets <- 
+  subset(tweets,
+         str_detect(
+           text,
+           regex('The Grinch',
+                 ignore_case = TRUE)
+         ))
+
+
+head(select(GrinchTweets, text))
+```
+
+```{r}
+sum(str_detect(
+  tweets$text, 'The Queens Gambit')
+)
+
+QCTweets <- 
+  subset(tweets,
+         str_detect(
+           text,
+           regex('The Queens Gambit',
+                 ignore_case = TRUE)
+         ))
+
+
+head(select(QCTweets, text))
+```
+
+```{r}
+sum(str_detect(
+  tweets$text, 'The Christmas Chronicles')
+)
+
+CCTweets <- 
+  subset(tweets,
+         str_detect(
+           text,
+           regex('The Christmas Chronicles',
+                 ignore_case = TRUE)
+         ))
+
+
+head(select(CCTweets, text))
+```
+
+
+```{r}
+sum(str_detect(
+  tweets$text, 'Peppermint')
+)
+
+PeppermintTweets <- 
+  subset(tweets,
+         str_detect(
+           text,
+           regex('Peppermint',
+                 ignore_case = TRUE)
+         ))
+
+
+head(select(PeppermintTweets, text))
+```
+
+# Sentiment Analysis
+1 = negative tweet
+0 = neutral tweet 
+
+```{r}
+netflix_tweets2 <- tweets %>%
+mutate(negative_tweet = if_else(str_detect(text, "bad show|sucks|not watch again|horrible season|casting|no more seasons|bad new season|bad movie| better movies|the crown |the queens gamblit|the christmas chronicles|selena netflix|the grinch| peppermint|nig mouth") == TRUE, true = 1, false = 0)) 
+netflix_tweets2
+```
+
+
+```{r}
+# Data Prep
+netflix_tweets3 <- select(netflix_tweets2, text, negative_tweet)
+
+neutral <- mutate(netflix_tweets2, text = "0")
+neutral
+
+negative <- mutate(netflix_tweets2, text = "1")
+negative
+
+# Combine
+typeoftweet <- rbind(neutral, negative)
+typeoftweet
+
+# Update Factors, Neutral = 0, Negative = 1
+typeoftweet$negative_tweet <- factor(typeoftweet$negative_tweet, levels = c("neutral", "negative"))
+
+# Verify factor levels
+contrasts(typeoftweet$negative_tweet)
+
+# Set the random seed for repeatability
+set.seed(123)
+
+# Spkit the data into 3:1 ratio
+typeoftweet$sample_tweet <- sample.split(typeoftweet$negative_tweet, SplitRatio = .75)
+typeoftweet$sample_tweet
+
+train_tweet <- filter(typeoftweet, sample_tweet == TRUE)
+test_tweet <- filter(typeoftweet, sample_tweet == FALSE)
+```
+```{r}
+# Logistic Model
+lgModel_tweet <- glm(formula = negative_tweet ~ text, data = train_tweet, family = binomial)
+summary(lgModel_tweet)
+
+# Prediction
+test_tweet$TypeProbability <- predict(lgModel_tweet, test_tweet, typeoftweet = "response")
+test_tweet
+
+# Classfy Probability
+test_tweet <- mutate(test_tweet,
+               
+               PredictedType = ifelse(TypeProbability < .5, "neutral", "negative"))
+test_tweet
+
+# Convert to leveled factors
+test_tweet$PredictedType <-  factor(test_tweet$PredictedType, levels = c("neutral", "negative"))
+test_tweet
+
+# Generate Confusion Matrix
+confusionMatrix(test_tweet$negative_tweet, test_tweet$PredictedType)
+
+# Calculate precision
+precisionTypeQ1 <- precision(test_tweet$negative_tweet, test_tweet$PredictedType)
+
+# Calculate recall
+recallTypeQ1 <- recall(test_tweet$negative_tweet, test_tweet$PredictedType)
+
+cat("Precision:", precisionTypeQ1 , "\n" )
+cat("Recall:", recallTypeQ1 , "\n" )
+```
+
+# Decision Trees
+
+```{r}
+# DECISION TREE MODEL
+tweets_tree <- ctree(negative_tweet ~ text +
+                    data = train_tweet)
+tweets_tree
+
+# PLOT TREE
+plot(tweets_tree)
+
+# PREDICTION
+test_tweet$predictedTweetsTree <- predict(tweets_tree, newdata = test_tweet)
+
+# ACCURACY
+# Generate a confusion matrix
+confusionMatrix(test_tweet$negative_tweet, test_tweet$predictedTweetsTree)
+
+# Calculate Precision
+precision_tweets_tree <- precision(test_tweet$negative_tweet, test_tweet$predictedTweetsTree)
+
+# Calculate Recall
+recall_tweets_tree <- recall(test_tweet$negative_tweet, test_tweet$predictedTweetsTree)
+
+cat("Precision:", precision_tweets_tree, "\n")
+cat("Recall:", recall_tweets_tree, "\n")
+```
+
+# Naive Bayes
+
+
+# Association Ruler or Clustering
+
+```{r}
+# K- Means: Data Preparation
+## Set the random seed
+set.seed(20)
+
+## Extract only text and negative_tweet for clustering
+netflix_tweetsNEW <- data.frame(Text = netflix_tweets3$text, NegativeTweets = netflix_tweets3$negative_tweet)
+head(netflix_tweetsNEW)
+
+# K- Means: Perform Algorithm
+## Perform kmeans with k set to 5
+netflix_Cluster <- kmeans(netflix_tweetsNEW, 5, nstart = 25)
+netflix_Cluster
+
+# K- Means: Verification and Visualization
+## Verification
+
+table(netflix_Cluster$cluster, netflix_tweetsNEW$negative_tweet)
+
+# Visualization
+## Add the cluster assignment to each point
+netflix_tweetsNEW$Cluster <- as.factor(netflix_Cluster$cluster)
+
+## Get centroids
+netflix_centroids <- as.data.frame(netflix_Cluster$centers)
+netflix_centroids$Cluster<- as.factor(c(1:5))
+
+## Visualize cluster assignments
+ggplot(data = netflix_tweetsNEW , mapping = aes(text, negative_tweet, color = Cluster)) +
+ geom_point() +
+  geom_point(data = netflix_centroids, mapping = aes(x= Text, y= NegativeTweets, fill = Cluster), size = 5, shape = 14) +
+  labs(title = "Text vs. NegativeTweets", 
+       x = "Text", 
+       y = "NegativeTweets")
+
+# Within Sum of Squares
+## For each k, perform WSS, store the value
+wssNetflix <- numeric(15)
+for (k in 1:15)
+  wssNetflix[k] = sum(kmeans(netflix_tweetsNEW, k, nstart = 25)$withinss)
+
+## Make a data frame out of the WSS results
+wssNetflixResults <- data.frame(k= c(1:15), wss = wssNetflix)
+wssNetflixResults 
+
+## Visualize WSS
+ggplot(data = wssNetflixResults , mapping = aes(x = k, y = wssNetflix)) +
+ geom_point() +
+  geom_line() +
+  labs(title = "K-means: Netflix", 
+       x = "Number of negative tweets k", 
+       y = "Within Sum of Squares")
+```
