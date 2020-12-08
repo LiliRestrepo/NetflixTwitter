@@ -1,14 +1,11 @@
 # NetflixTwitter
+Netflix is one of the biggest and most valuables streaming companies of all times, and everyday tens of thousands of people are been tweeting, liking, and retweeting about Netflix trending shows. The streaming service is hard to avoid on Twitter, getting validation from their strategy encourages the platform to expand their Twitter interaction with their audience by sharing memes about their own shows and creating polls and questionaries about their services. 
 
-# Objective
-Our objective of this project is to analyze tweets related to Netflix in order to analyze the trends of the ever popular streaming platform. Due to COVID-19, Netflix has seen more subscribers than ever before as people look to the platform as a major source of entertainment. We would like to see what people are saying on twitter about Netflix and the shows and movies offered by the platform. Some questions we can ask are: How has the brand image of Netflix changed over the years?  What shows and movies are receiving the most recognition? Is it positive or negative
+## Objective
+Our objective for this project is to analyze tweets related to Netflix in order to analyze the trends of the most popular streaming platform. Due to COVID-19, Netflix subscribers have been rising up quicker than ever before as people look to the platform as a major source of entertainment. We would like analyze their audience sentiment, see what people are saying on twitter about Netflix and the latest top 10 rated shows and movies offered by the platform. Some questions we will ask are: How has the brand image of Netflix changed over the years?  What shows and movies are receiving the most recognition? Is their audience showing a positive, negative, or neutral reaction to these shows and movies?
 
-#  Motivation
+##  Motivation
+We look forward to analyze data and running models in order to understand why are these shows so popular and conclude if they are worth it to be the best top shows regarding the spectators opinions. Also, we want to discover the relationship between these shows and movies and the audience feelings during COVID times. The impact of these shows during a pandemic and during the Holidays could make the audience feel overwhelmed, making them miss their families and feel sad or lonley. In the other hand, it might make them feel happier, bringing them joyful and warm thoughts.
 
-
-# Purpose
-
-# Obtaining Data
-We will need to clean the data, since is a trending topic, the tweets have too many @ and # that maybe won't be helpful on our analysis, also we will extract the show ‘s names to analyze the sentiment of each show and the overall polarity on the different opinions. 
-We will search for keyphrases like #Netflix, #NetflixShows #NetflixOriginals, #NetflixandChill, #QuarantineandChill and analyze if the tweets obtained are positively or negatively related to Netflix. 
-
+## Obtaining Data
+The first step was to get access to Twitter API and then get our keys in order to create a code that could constantly pull out data from Twitter within the past 7 days from the code beign ran. Afterwards, we were able to clean the data. Since is a trending topic, the tweets have too many @ and # that maybe won't be helpful on our analysis, therefore we needed to filter our data in order to find just the tweets that would be helpful for our analysis. Finally, we will extract the show ‘s names to analyze the sentiment of each show and the overall polarity on the different opinions. We searched for keyphrases like #SelenaNetflix, #Selena, #BigMouth, #BigMouthNetflix, #VirginRiver, #PeppermintNetflix, #TheCrown, #TheCrownNetflix, #TheQueensGambit, #TheQueensGambitNetflix, #Marauders, #AlienWorld, #TheChristmasChronicles, and #TheGrinch. We also looked focused to look at more general tweets to make sure we gathered tweets about the shows beign watched from the platform we are interested in, like #Netflix, #NetflixShows #NetflixOriginals, #NetflixandChill, #QuarantineandChill and analyze if the tweets obtained are positively or negatively related to Netflix.
