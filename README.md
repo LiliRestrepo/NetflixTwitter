@@ -1,8 +1,8 @@
-
+![Image](https://www.google.com/search?q=netflix+twitter+covid&sxsrf=ALeKk01I_TRyYks6IS1jVLN1tFd_tdvD7A:1607460326894&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjr_piuoL_tAhWgCRAIHT0sCfMQ_AUoAXoECAQQAw&biw=1440&bih=789#imgrc=6U79JK11svwK4M)
 
 #                                                   Twitter Data Analysis: Netflix growth in a COVID-19 world
 
-Netflix is one of the biggest and most valuables streaming companies of all times, and everyday tens of thousands of people are been tweeting, liking, and retweeting about Netflix trending shows. The streaming service is hard to avoid on Twitter, getting validation from their strategy encourages the platform to expand their Twitter interaction with their audience by sharing memes about their own shows and creating polls and questionaries about their services. As we know, COVID-19 has had a big impact in everyone's life, even in big companies like Netflix. So, is Netflix having a positive outcome from it's subscribers during a pandemic? How are viewers feeling about Netflix content lately?. To answer our question our team has collected data from Twitter, from which we used R Studio to research among data, create a hypothesis, and produce models that will lead us to a better understanding of this topic. 
+With almost 14,000 titles, over 167 Million subscribers and 9.9 Million twitter followers, Netflix is one of the biggest and most valuables streaming companies of all times, and everyday tens of thousands of people are been tweeting, liking, and retweeting about Netflix trending shows. The streaming service is hard to avoid on Twitter, getting validation from their strategy encourages the platform to expand their Twitter interaction with their audience by sharing memes about their own shows and creating polls and questionaries about their services. As we know, COVID-19 has had a big impact in everyone's life, even in big companies like Netflix. So, is Netflix having a positive outcome from it's subscribers during a pandemic? How are viewers feeling about Netflix content lately?. To answer our question our team has collected data from Twitter, from which we used R Studio to research among data, create a hypothesis, and produce models that will lead us to a better understanding of this topic. 
 
 # Motivation and Objective
 
@@ -55,8 +55,7 @@ For uncovering patterns and trends, make predictions and test our hypothesis, th
 
 # Logistic Model
 ## Logistic Regression
-* In this analysis, we will classify Top 5 and Bottom 5 shows using logistic regression.
-
+In this analysis, we will classify Top 5 and Bottom 5 tweets shows using logistic regression.
 * Question: Given a Favorite Count and Number of followers, classify a tweet to be part of the Top 5 or the Bottom 5 shows, considering the Top10 of saturday 5th:
 
 #
