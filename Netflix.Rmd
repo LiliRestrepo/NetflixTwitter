@@ -1,0 +1,1219 @@
+---
+title: "TOP 10 SHOWS ON NETFLIX, SATURDAY DECEMBER 5TH 2020"
+output: html_notebook
+---
+
+# Results {.tabset}
+
+
+## 1. Pulling the data from Twitter API 
+
+### TOP 10 SHOWS ON NETFLIX, SATURDAY DECEMBER 5TH 2020
+
+### Libraries and API Keys
+```{r}
+# Load Libraries 
+
+install.packages("rtweet")
+
+library(tidyverse)
+library(RMySQL)
+library(odbc)
+library(DBI)
+library(rtweet)
+library(ggplot2)
+library(lda)
+library(reshape2)
+
+install.packages("jsonlite")
+install.packages("tm")
+install.packages("quanteda")
+install.packages("forestmangr")
+install.packages("janeaustenr")
+install.packages("dplyr")
+install.packages("tidytext")
+
+library(jsonlite)
+library(stringr)
+library(tm)
+library(quanteda)
+library(forestmangr)
+library(dplyr)
+library(janeaustenr)
+library(tidytext)
+
+install.packages("wordcloud")
+library(wordcloud)
+install.packages("RColorBrewer")
+library(RColorBrewer)
+install.packages("wordcloud2")
+library(wordcloud2)
+```
+
+#### Api keys 
+```{r}
+api_key             <- "3qywViZizGacdoPxV2R2VEcHr"
+api_secret_key      <- "2oAc69zn1D1HpRyEmIGrbcVfN23eqzjxOmlBaFQxLRsdVqbmez"
+access_token        <- "1326250435628457985-SbjgJXYDzr61Rc7uhNjOK6iMBYROsm"
+access_token_secret <- "FL5gSr0QZdmcOvUKnwfJYKFgtMBNj66acYhGZFY4KwAdS"
+```
+
+#### Authenticate via web browser
+```{r}
+token <- create_token(
+  app = "LiliTextAnalysis",
+  consumer_key = api_key,
+  consumer_secret = api_secret_key,
+  access_token = access_token,
+  access_secret = access_token_secret)
+
+```
+
+### Pulling data from Saturday - mentioning netflix and the top 10 shows on the platform
+
+*Top 10 shows Saturday, Dec 5th, 2020:
+
++ 1 Selena
++ 2 Big Mouth 
++ 3 Virgin River 
++ 4 Peppermint
++ 5 Marauders 
++ 6 Queens Gambit 
++ 7 The Christmas Chronicles
++ 8 Alien Worlds 
++ 9 The Crown 
++ 10 The Grinch
+
+#### Pulling tweets
+
+```{r}
+## Tweets with #Netflix 
+
+HT_netflix <- search_tweets(q = "#Netflix | #netflix", 
+                        n = 10000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(HT_netflix)
+```
+
+
+```{r}
+## Tweets that mention Netflix
+
+Mention_netflix <- search_tweets(q = "@Netflix | @netflix", 
+                        n = 10000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+```{r}
+view(Mention_netflix)
+```
+
+
+
+```{r}
+## Tweets with #Netflix SECOND TIME (+OR)
+
+HT_netflix2 <- search_tweets(q = "#Netflix OR #netflix", 
+                        n = 10000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+
+
+```{r}
+## Tweets that mention Netflix SECOND TIME (+OR)
+
+Mention_netflix2 <- search_tweets(q = "@Netflix OR @netflix", 
+                        n = 10000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+## Tweets with #Selena
+
+Selena <- search_tweets(q = "#SelenaNetflix OR #selenanetflix OR #selenatheseries OR #SelenaTheSeries", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(Selena)
+```
+
+```{r}
+## Tweets with #BigMouth
+BigM <- search_tweets(q = "#BigMouth OR #BigMouthSeason4 OR @bigmouth ", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(BigM)
+```
+
+
+
+```{r}
+## Tweets with #VirginRiver
+VirginR_netflix <- search_tweets(q = "#VirginRiver OR #VirginRiverSeason2 OR #virginriver ", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(VirginR)
+```
+
+
+
+```{r}
+## Tweets with #marauders AND #netflix 
+Mara <- search_tweets(q = "#marauders  AND  #netflix ", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+
+```{r}
+view(Mara)
+```
+
+```{r}
+PPmint <- search_tweets(q = "#peppermint  AND  #netflix ", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+## Tweets with #QueensGambit
+QueensG <- search_tweets(q = "#QueensGambit  OR #TheQueensGambit OR #queensgambit  ", 
+                        n = 10000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(QueensG)
+```
+
+
+
+```{r}
+## Tweets with #ChristmasChronicles
+XmasC <- search_tweets(q = "#ChristmasChronicles  OR #christmaschronicles   ", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(XmasC)
+```
+
+
+
+```{r}
+## Tweets with #AlienWorlds
+AlienW <- search_tweets(q = "#AlienWorlds  OR #alienworlds   ", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(AlienW)
+```
+
+
+```{r}
+## Tweets with #TheCrown
+TCrown <- search_tweets(q = "#TheCrown  OR #TheCrownNetflix OR @TheCrownNetflix  ", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(TCrown)
+```
+
+
+
+```{r}
+## Tweets with #TheGrinch
+TGrinch <- search_tweets(q = "#TheGrinch  OR @TheGrinch2000 ", 
+                        n = 9000,
+                        include_rts = FALSE,
+                        `-filter` = "replies",
+                        lang = "en")
+```
+
+```{r}
+view(TGrinch)
+```
+
+#### Saving data in CSV (in case we have a problem)
+
+```{r}
+write_as_csv(HT_netflix, "HT_netflix", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(HT_netflix, "HT_netflix", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(HT_netflix2, "HT_netflix2", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(HT_netflix2, "HT_netflix2", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(Mention_netflix, "Mention_netflix", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(Mention_netflix, "Mention_netflix", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(Mention_netflix2, "Mention_netflix2", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(Mention_netflix2, "Mention_netflix2", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(Selena, "Selena", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(Selena, "Selena", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(BigM, "BigM", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(BigM, "BigM", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(VirginR_netflix, "VirginR", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(VirginR_netflix, "VirginR", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(Mara, "Mara", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(Mara, "Mara", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(QueensG, "QueensG", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(QueensG, "QueensG", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+
+```{r}
+write_as_csv(XmasC, "XmasC", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(XmasC, "XmasC", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(AlienW, "AlienW", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(AlienW, "AlienW", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(TCrown, "TCrown", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(TCrown, "TCrown", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(TGrinch, "TGrinch", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(TGrinch, "TGrinch", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+```{r}
+write_as_csv(PPmint, "PPmint", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(PPmint, "PPmint", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+
+```{r}
+Saturday_T10 <-  rbind(HT_netflix, HT_netflix2, Mention_netflix, Mention_netflix2,  Selena, BigM, VirginR_netflix, Mara, QueensG, XmasC, AlienW, TCrown, TGrinch, PPmint)
+
+```
+
+```{r}
+write_as_csv(Saturday_T10, "Saturday_T10", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(Saturday_T10, "Saturday_T10", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+
+```{r}
+Saturday_T10_ok <-  Saturday_T10[!duplicated(Saturday_T10[ , c("status_id")]),]
+```
+
+```{r}
+write_as_csv(Saturday_T10_ok, "Saturday_T10_ok", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(Saturday_T10_ok, "Saturday_T10_ok", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+## 2. AWS
+
+```{r}
+install.packages("RMySQL")
+install.packages("odbc")
+install.packages("DBI")
+
+library(tidyverse)
+library(RMySQL)
+library(odbc)
+library(DBI)
+```
+
+
+```{r}
+NetflixBaseData <- read_csv("C:/Users/lilir/Desktop/STU/4 Program for Big Data/R Files/Saturday_T10.csv")
+```
+
+
+```{r}
+#instance Details
+host = "database1.cr5n3ecrfscz.us-east-1.rds.amazonaws.com"
+port = 3306
+user = "admin"
+password = "titateamo0389"
+```
+
+```{r}
+#Instance Connection
+my_instance = DBI::dbConnect(
+  RMySQL ::MySQL(),
+  host = host,
+  port = port,
+  user = user,
+  password = password
+)
+```
+
+
+```{r}
+# Database name
+
+dbname = "database1"
+```
+
+
+```{r}
+#connecting to database
+con = DBI::dbConnect(
+  RMySQL ::MySQL(),
+  dbname = dbname,
+  host = host,
+  port = port,
+  user = user,
+  password = password
+)
+```
+
+```{r}
+# Reading Tables
+tables <- dbListTables(con)
+sort(tables)
+```
+```{r}
+# Creating a new Table 
+dbCreateTable(conn = con,name = "NetflixBaseData", fields = NetflixBaseData, row.names = NULL)
+```
+
+```{r}
+# Reading Tables (see if i have data)
+tables <-  dbListTables(con)
+sort(tables)
+```
+```{r}
+# Reading Empty Table
+N_AWS <-  dbReadTable(con, "NetflixBaseData") 
+str(N_AWS)
+
+```
+```{r}
+NetflixBaseData
+```
+
+```{r}
+# Saturday_T10_ok <- NetflixBaseData
+```
+
+
+
+
+
+## 3. Text Analysis 
+### Libraries and view Data
+```{r}
+install.packages("tidyverse")
+install.packages("lda")
+install.packages("reshape2")
+
+library(ggplot2)
+library(lda)
+library(reshape2)
+```
+#### View Data 
+```{r}
+head(Saturday_T10_ok)
+```
+
+### Sentiment analysis with Voson package
+#### Libraries
+```{r}
+install.packages(c("vosonSML"))
+library(vosonSML)
+library(tidyverse)
+library(tidytext)
+library(quanteda)
+```
+
+#### View data and drop columns 
+```{r}
+dt_tweets <- read.csv2("C:/Users/lilir/Desktop/STU/4 Program for Big Data/R Files/Saturday_T10_ok.csv", 
+                       sep=",", 
+                       header=TRUE,
+                       stringsAsFactors=FALSE) %>%
+  select(-reply_to_status_id,	-reply_to_user_id,	-reply_to_screen_name, -quote_count, -reply_count, -quoted_status_id,	-quoted_text,	-quoted_created_at,	-quoted_source,	-quoted_favorite_count,	-quoted_retweet_count,	-quoted_user_id,	-quoted_screen_name,	-quoted_name,	-quoted_followers_count,	-quoted_friends_count,	-quoted_statuses_count,	-quoted_location,	-quoted_description,	-quoted_verified,	-retweet_status_id,	-retweet_text,	-retweet_created_at,	-retweet_source,	-retweet_favorite_count,	-retweet_retweet_count,	-retweet_user_id,	-retweet_screen_name,	-retweet_name,	-retweet_followers_count,	-retweet_friends_count,	-retweet_statuses_count,	-retweet_location,	-retweet_description,	-retweet_verified,	-place_url,	-place_name,	-place_full_name,	-place_type, -hashtags
+
+
+)
+str(dt_tweets)
+```
+#### Convert data to text corpus
+```{r}
+# convert the data set to a text corpus
+tweet_corp <- quanteda::corpus(dt_tweets, 
+                               text="text")
+
+# quick summary
+summary(tweet_corp, 
+        n=2)
+```
+#### Get sentiment on affin pckg
+```{r}
+senti <- get_sentiments("afinn")
+head(senti)
+```
+#### Merge sentiments and data
+```{r}
+# Let's read our tweets in again and merge the sentiments
+tweet_tidy <- as_tibble(dt_tweets) %>% 
+  # tokenize the tweets
+  tidytext::unnest_tokens(word, text) %>%
+  # merge sentiment
+  inner_join(senti)
+
+# Note: inner_join keeps only those rows that are present in both data sets
+# now we can group the sentiment by tweets and a positivity score by totaling the sentiments
+
+positivity <- tweet_tidy %>%
+  group_by(status_id) %>%
+  summarise(positiv=sum(value))
+head(positivity)
+```
+
+#### Merge Positivity and plot the sentiment 
+```{r}
+# merge the positivity score back to the tweet_tidy data
+tweet_tidy <- as_tibble(dt_tweets2) %>% 
+  inner_join(positivity, by="status_id") %>%
+  mutate(datum=ymd(date))
+
+ggplot(tweet_tidy, aes(x=datum, y=positiv)) + 
+  geom_point() +
+  geom_smooth() +
+  theme_minimal() +
+  labs(x="created_at",
+       y="Average sentiment")
+```
+### Understanding the Source of the Tweets (Organic or Replies / Source Android, Iphone, Web, etc )
+
+#### Tidy data, separate date 
+```{r}
+dt_tweets2 <- dt_tweets %>%
+   separate(created_at, into = c("date", "hour"), sep = " ", convert = TRUE)
+```
+
+```{r}
+tweet_tidy
+```
+
+
+```{r}
+tweet_tidy$date <- as.character(tweet_tidy$datum, format = "%m/%d/%Y")
+```
+#### Identify organic tweets and replies (no replies since source)
+```{r}
+# Remove retweets
+HT_tweets_organic <- Saturday_T10_ok[Saturday_T10_ok$is_retweet==FALSE, ] 
+# Remove replies
+HT_tweets_organic <- subset(HT_tweets_organic, is.na(HT_tweets_organic$reply_to_status_id)) 
+```
+
+```{r}
+HT_tweets_organic <- HT_tweets_organic %>% arrange(-favorite_count)
+HT_tweets_organic[1,5]
+HT_tweets_organic <- HT_tweets_organic %>% arrange(-retweet_count)
+HT_tweets_organic[1,5]
+```
+
+
+```{r}
+# Keeping only the retweets
+HT_retweets <- Saturday_T10_ok[Saturday_T10_ok$is_retweet==TRUE,]
+# Keeping only the replies
+HT_replies <- subset(Saturday_T10_ok, !is.na(Saturday_T10_ok$reply_to_status_id))
+```
+
+
+
+
+```{r}
+
+# Creating a data frame
+dataHT <- data.frame(
+  category=c("Organic", "Retweets", "Replies"),
+  count=c(46379, 0, 11510)
+)
+```
+
+
+
+#### Plot - Type of tweet (organic or replies)
+```{r}
+# Adding columns 
+dataHT$fraction = dataHT$count / sum(dataHT$count)
+dataHT$percentage = dataHT$count / sum(dataHT$count) * 100
+dataHT$ymax = cumsum(dataHT$fraction)
+dataHT$ymin = c(0, head(dataHT$ymax, n=-1))
+# Rounding the data to two decimal points
+dataHT <- round_df(dataHT, 2)
+# Specify what the legend should say
+Type_of_TweetHT <- paste(dataHT$category, dataHT$percentage, "%")
+ggplot(dataHT, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Type_of_TweetHT)) +
+  geom_rect() +
+  coord_polar(theta="y") + 
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "right")
+
+```
+```{r}
+N_appHT <- Saturday_T10_ok %>% 
+  select(source) %>% 
+   group_by(source) %>%
+  summarize(count=n())
+N_appHT <- subset(N_appHT, count > 11)
+```
+#### Plot Source - Whats the source of the tweet (movil, web, etc)
+
+```{r}
+dataHT <- data.frame(
+  category=N_appHT$source,
+  count=N_appHT$count
+)
+dataHT$fraction = dataHT$count / sum(dataHT$count)
+dataHT$percentage = dataHT$count / sum(dataHT$count) * 100
+dataHT$ymax = cumsum(dataHT$fraction)
+dataHT$ymin = c(0, head(dataHT$ymax, n=-1))
+dataHT <- round_df(dataHT, 2)
+Source <- paste(dataHT$category, dataHT$percentage, "%")
+ggplot(dataHT, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Source)) +
+  geom_rect() +
+  coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
+  xlim(c(2, 4)) +
+  theme_void() +
+  theme(legend.position = "right")
+```
+#### Getting most used words
+
+```{r}
+HT_tweets_organic$text <-  gsub("https\\S*", "", HT_tweets_organic$text)
+HT_tweets_organic$text <-  gsub("@\\S*", "", HT_tweets_organic$text) 
+HT_tweets_organic$text  <-  gsub("amp", "", HT_tweets_organic$text) 
+HT_tweets_organic$text  <-  gsub("[\r\n]", "", HT_tweets_organic$text)
+HT_tweets_organic$text  <-  gsub("[[:punct:]]", "", HT_tweets_organic$text)
+```
+
+
+```{r}
+tweetsHT <- HT_tweets_organic %>%
+  select(text) %>%
+  unnest_tokens(word, text)
+tweetsHT <- tweetsHT %>%
+  anti_join(stop_words)
+```
+#### Plot - Frequent words 
+```{r}
+tweetsHT %>% # gives you a bar chart of the most frequent words found in the tweets
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+  labs(y = "Count",
+       x = "Unique words",
+       title = "Frequent words found in tweets than mention Netflix and Top 10 Shows",
+       subtitle = "Stop words removed from the list")
+```
+#### Word cloud - Frequent hashtags on tweets that mention Netflix and top 10 shows   
+
+```{r}
+HT_tweets_organic$hashtags <- as.character(HT_tweets_organic$hashtags)
+HT_tweets_organic$hashtags <- gsub("c\\(", "", HT_tweets_organic$hashtags)
+set.seed(1234)
+wordcloud(HT_tweets_organic$hashtags, min.freq=5, scale=c(3.5, .5), random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+#### Word cloud - Frequent hashtags on tweets that mention Netflix
+```{r}
+JustNetflix <- rbind(Mention_netflix, Mention_netflix2, HT_netflix, HT_netflix2)
+
+JustNetflix$hashtags <- as.character(JustNetflix$hashtags)
+JustNetflix$hashtags <- gsub("c\\(", "", JustNetflix$hashtags)
+set.seed(1234)
+wordcloud(JustNetflix$hashtags, min.freq=5, scale=c(3.5, .5), random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+###  Sentiment analysis with Syuzhet package 
+
+```{r}
+install.packages("syuzhet")
+library(syuzhet)
+# Converting tweets to ASCII to trackle strange characters
+tweets2 <- iconv(tweetsHT, from="UTF-8", to="ASCII", sub="")
+# removing retweets, in case needed 
+tweets2 <-gsub("(RT|via)((?:\\b\\w*@\\w+)+)","",tweets2)
+# removing mentions, in case needed
+tweets2 <-gsub("@\\w+","",tweets2)
+ew_sentiment<-get_nrc_sentiment((tweets2))
+sentimentscores<-data.frame(colSums(ew_sentiment[,]))
+names(sentimentscores) <- "Score"
+sentimentscores <- cbind("sentiment"=rownames(sentimentscores),sentimentscores)
+rownames(sentimentscores) <- NULL
+ggplot(data=sentimentscores,aes(x=sentiment,y=Score))+
+  geom_bar(aes(fill=sentiment),stat = "identity")+
+  theme(legend.position="none")+
+  xlab("Sentiments")+ylab("Scores")+
+  ggtitle("Total sentiment based on scores")+
+  theme_minimal()
+```
+
+## 4.Models 
+
+### Logistic Regression 
+
+* In this analysis, we will classify Top 5 and Bottom 5 shows using logistic regression.
+
+* Question: Given a Favorite Count and Number of followers, classify a tweet to be part of the Top 5 or the Bottom 5 shows, considering the Top10 of saturday 5th:
+
+#### Install and Load Libraries
+```{r}
+# Install Libraries
+#install.packages("tidyverse")
+#install.packages("caTools")Marvel
+#install.packages("caret")
+#install.packages("e1071")
+
+# Load Libraries
+library(tidyverse)
+library(caTools)
+library(caret)
+library(e1071)
+```
+
+#### Data Prep, adding columns to Classify hashtags
+
+```{r}
+Selena2 <- Selena %>% mutate( Top = "Top5", Show.Mentioned = "Selena", Position = 1)
+BigM2 <- BigM %>% mutate( Top = "Top5", Show.Mentioned = "BigMouth", Position = 2)
+VirginR_netflix2 <- VirginR_netflix %>% mutate( Top = "Top5", Show.Mentioned = "VirginRiver", Position = 3)
+PPmint2 <- PPmint %>% mutate( Top = "Top5", Show.Mentioned = "Peppermint", Position = 4)
+Mara2 <- Mara %>% mutate( Top = "Top5", Show.Mentioned = "Marauders", Position = 5)
+
+QueensG2 <- QueensG %>% mutate( Top = "Bottom5", Show.Mentioned = "QueensGambit", Position = 6)
+XmasC2 <- XmasC %>% mutate( Top = "Bottom5", Show.Mentioned = "ChristmasChronicles", Position = 7)
+AlienW2 <- AlienW %>% mutate( Top = "Bottom5", Show.Mentioned = "AlienWorlds", Position = 8)
+TCrown2 <- TCrown %>% mutate( Top = "Bottom5", Show.Mentioned = "TheCrown", Position = 9)
+TGrinch2 <- TGrinch %>% mutate( Top = "Bottom5", Show.Mentioned = "TheGrinch", Position = 10)
+```
+
+```{r}
+Netflix_M <- rbind(Selena2, BigM2, VirginR_netflix2, PPmint2, Mara2, QueensG2, XmasC2, AlienW2, TCrown2, TGrinch2 )
+Netflix_M
+```
+```{r}
+Netflix_M_ok <-  Netflix_M[!duplicated(Netflix_M[ , c("status_id")]),]
+Netflix_M_ok
+```
+
+
+```{r}
+write_as_csv(Netflix_M_ok, "Netflix_M", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+
+save_as_csv(Netflix_M_ok, "Netflix_M", prepend_ids = TRUE, na = "", fileEncoding = "UTF-8")
+```
+
+#### Update Factors 
+```{r}
+#to convert from ordinal we convert to chr and then to factor
+#the dependables should be dbl 
+Netflix_M_ok$Top <- factor(Netflix_M_ok$Top, levels = c("Top5", "Bottom5"))
+Netflix_M_ok
+```
+#### Verify factor levels
+```{r}
+contrasts(Netflix_M_ok$Top)
+```
+#### Sample the data 
+Proportion 75% train, test 25%
+
+```{r}
+##Set Random Seed
+set.seed(123)
+
+## Split the data into 3:1 ratio 
+Netflix_M_ok$Sample <-  sample.split(Netflix_M_ok$Top, SplitRatio = .75)
+Netflix_M_ok
+
+## 75% will our train and the rest the test
+
+train <-  filter(Netflix_M_ok, Sample == TRUE)
+test <- filter(Netflix_M_ok, Sample == FALSE)
+```
+#### Logistic Model 
+followers_count
+```{r}
+lgModel <- glm(formula = Top ~ favorite_count + followers_count,
+               data = train,
+               family = binomial)
+
+summary (lgModel)
+```
+#### Prediction
+```{r}
+#Prediction
+##Predicting the probability belonging to Top5 
+test$TopProbability <- predict(lgModel, test, type = "response")
+
+#View the results
+test
+```
+#### Classify Probability 
+Closer to 1 will be Bottom5, closer to 0 will be Top5
+```{r}
+test <- mutate (test,
+                PredictedTop = ifelse(TopProbability < .5, "Top5", "Bottom5"))
+
+##convert column to factors
+
+test$PredictedTop <-  factor(test$PredictedTop, levels = c("Top5", "Bottom5"))
+test
+```
+#### Accuracy 
+How close is my model to the truth? How good is it??
+```{r}
+#Generate a confusion matrix
+## give us accuracy 
+confusionMatrix(test$Top, test$PredictedTop)
+
+#Calculate precision
+precisionTop <- precision(test$Top, test$PredictedTop)
+
+#Calculate the recall 
+recallTop <- recall(test$Top, test$PredictedTop)
+
+cat("Precision:", precisionTop, "\n")
+## looking the true positives, for accuracy how better are we in terms of the 
+
+cat("Recall:", recallTop , "\n")
+## facturing in true positives, and true negatives
+```
+### Build a ctree
+
+#### Creating Ctree
+```{r}
+library(tidyverse)
+library(caTools)
+library(caret)
+library(e1071)
+library(party)
+require(caTools)
+
+# Create the ctree
+
+ctreeModelNetflix <- ctree(Top ~ followers_count + friends_count + favourites_count  , data = train)
+ctreeModelNetflix
+
+```
+#### Plot the Ctree
+
+```{r}
+#Plot the tree 
+plot(ctreeModelNetflix)
+```
+#### Predict the Ctree
+
+```{r}
+# Predict the CTree
+
+predict.ctreeNetflix <-predict(ctreeModelNetflix, newdata = test )
+table(test$Top, predict.ctreeNetflix, dnn = c("Actual", "Prediction"))
+```
+#### Total Accuracy
+
+```{r}
+#What is the total accuracy 
+
+Total = 3436 + 2779
+TotalAccuracy = 3436 / Total
+TotalAccuracy
+```
+### Build a Cart
+
+#### Libraries 
+
+```{r}
+#Required packgs
+install.packages("rpart")
+install.packages("rpart.plot")
+
+library(rpart)
+library(rpart.plot)
+library(caTools)
+```
+#### Repeatability 
+
+```{r}
+# Set the random seed for repeatability
+set.seed(321) 
+
+# Split the data into 3:1 ratio
+sampleN = sample.split(Netflix_M_ok$Show.Mentioned, SplitRatio = .6)
+trainN = subset(Netflix_M_ok, sampleN == TRUE)
+testN  = subset(Netflix_M_ok, sampleN == FALSE)
+
+```
+
+#### Creating CART tree
+
+```{r}
+#Build a model 
+
+#Create the CART tree
+cartTreeModelNetflix <- rpart(Show.Mentioned ~  followers_count + friends_count + favourites_count , data = trainN)
+cartTreeModelNetflix
+```
+
+
+
+#### Plot the CART 
+```{r}
+#Visualization 
+
+
+rpart.plot(cartTreeModelNetflix, extra = 2, under = TRUE)
+
+```
+#### Predict CART tree
+
+```{r}
+#Predict Cart 
+
+pred.cartNetflix <- predict(cartTreeModelNetflix,
+                     newdata = testN,
+                     type = "class")
+
+
+table(testN$Show.Mentioned, pred.cartNetflix, dnn = c("Actual", "Prediction") )
+
+
+```
+### Naive Bayes 
+
+#### Libraries 
+```{r}
+# Install and load e1071 library for Naive Bayes
+install.packages("e1071")
+library(e1071)
+
+```
+```{r}
+NB_Netflix <- select(Netflix_M_ok, Show.Mentioned, followers_count, friends_count, favourites_count )
+
+NB_Netflix$contains.Top2 <- ifelse(str_detect(NB_Netflix$Show.Mentioned, regex('QueensGambit| Selena', ignore_case = TRUE)), "No", "Yes")
+
+NB_Netflix$contains.Top2 <- as.factor(NB_Netflix$contains.Top2)
+NB_Netflix
+```
+#### Sample the data
+
+```{r}
+# Set the random seed for repeatability
+set.seed(123)
+
+# Split the data into 3:1 ratio
+sample_NB = sample.split(NB_Netflix$contains.Top2, SplitRatio = .75)
+train_NB = subset(NB_Netflix, sample_NB == TRUE)
+test_NB = subset(NB_Netflix, sample_NB == FALSE)
+```
+
+#### Build the Naive Bayes CLassifier
+```{r}
+#Build the Naive Bayes CLassifier 
+
+nb_model <- naiveBayes(contains.Top2 ~ followers_count + favourites_count + friends_count, data = train_NB)
+nb_model
+
+```
+#### Predict the class
+```{r}
+# Perform on the testing set
+NB_prediction <- predict(nb_model, test_NB, type = "class")
+
+# Confusion Matrix
+table(test_NB$contains.Top2, NB_prediction, dnn = c("Actual", "Prediction"))
+
+```
+#### Output Results
+
+```{r}
+# Output results
+data.frame(test_NB, Prediction = NB_prediction)
+```
+#### Accuracy 
+```{r}
+#accuracy
+Accuracy_NB <- confusionMatrix(test_NB$contains.Top2, NB_prediction)
+
+# Calculate Precision
+precision_NB <- precision(test_NB$contains.Top2, NB_prediction)
+
+# Calculate Recall
+recall_NB <- recall(test_NB$contains.Top2, NB_prediction)
+
+cat("Accuracy:", Accuracy_NB[['overall']][['Accuracy']], "\n")
+```
+```{r}
+cat("Precision:", precision_NB, "\n")
+```
+```{r}
+cat("Recall:", recall_NB, "\n")
+```
+## 5. Clustering
+
+#### Libraries
+```{r}
+install.packages("factoextra")
+
+library(tidyverse)  # data manipulation
+library(cluster)    # clustering algorithms
+library(factoextra) # clustering algorithms & visualization
+```
+
+##### Selecting Data
+```{r}
+Clust_Net <- select(Netflix_M_ok, Top, Show.Mentioned, Position) 
+Clust_Net
+
+Clust_Net <-  Clust_Net %>%
+  mutate(Top, Top5_Bottom5 = ifelse(Top == "Top5", "1", "0"))
+Clust_Net
+```
+
+
+```{r}
+Clust_Net2 <-  Clust_Net %>%
+  group_by(Position)%>%
+  summarize(count = as.numeric(n()))
+Clust_Net2
+
+``` 
+#### Perform Kmeans with set to 3 
+
+```{r}
+NetflixCluster <- kmeans(Clust_Net2, centers = 3, nstart = 25)
+NetflixCluster
+```
+#### verification 
+```{r}
+table(NetflixCluster$cluster, Clust_Net2$Position)
+```
+#### Visualization 
+```{r}
+# Add the cluster assigment to each point 
+Clust_Net2$Cluster <- as.factor(NetflixCluster$cluster)
+
+# Get centroids 
+
+centroidsN <-  as.data.frame(NetflixCluster$centers)
+centroidsN$Cluster <-  as.factor(c(1:3))
+
+#Visualize cluster assigments 
+ggplot(Clust_Net2, aes(Position, count, color = Cluster)) +
+  geom_point()+
+  geom_point(centroidsN, mapping = aes(x = Position, y = count, fill = Cluster), size = 5, shape = 13) +
+  labs(title = "Position vs Count", 
+       x = "Position", 
+       y = "Count")
+
+
+centroidsN
+```
+
+## 6. Time Series and Forecast
+
+
+### Time Series 
+
+#### Libraries 
+```{r}
+library(forecast)
+```
+
+#### Select Data 
+```{r}
+TSPlot <-  Netflix_M_ok %>%
+  filter(Show.Mentioned == "QueensGambit") %>%
+  select(Show.Mentioned, created_at, Top)
+TSPlot
+```
+
+#### Library 
+```{r}
+library(hms)
+```
+
+#### Fixing Date and Hour 
+```{r}
+TSPlotFinal <- TSPlot %>% 
+  separate(created_at,into = c("Date", "Time"), sep = " ", convert = TRUE)
+TSPlotFinal
+```
+
+
+```{r}
+TSPlotFinal$Time <- hour(as.hms(TSPlotFinal$Time))
+TSPlotFinal$Date <- as.numeric(as.Date(TSPlotFinal$Date))
+```
+
+
+
+
+#### Arrange and Select
+
+```{r}
+TSPlotFinal <- TSPlotFinal %>%
+                  arrange(Date, Time) %>%
+                group_by(Date, Time) %>%
+  summarize(count= n())
+ TSPlotFinal
+```
+
+
+
+```{r}
+TSQueenG <-  ts(TSPlotFinal$count, start = c(18592, 13), end = c(18601, 23), frequency = 24)
+#
+```
+
+
+#### Plot - Decomposition Time Series 
+
+```{r}
+plot(decompose(TSQueenG))
+```
+
+
+### Build ARIMA Model
+
+```{r}
+# Build the ARIMA model
+arimaModel <- auto.arima(TSQueenG)
+arimaModel
+```
+### Predict 1 week of tweets
+```{r}
+# Predict 168 hours into the future
+arimaForecast <- forecast(arimaModel, h = 168)
+arimaForecast
+```
+
+#### Plot the forecast 
+
+```{r}
+plot(arimaForecast)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
