@@ -1,4 +1,5 @@
 # NetflixTwitter
+
 Netflix is one of the biggest and most valuables streaming companies of all times, and everyday tens of thousands of people are been tweeting, liking, and retweeting about Netflix trending shows. The streaming service is hard to avoid on Twitter, getting validation from their strategy encourages the platform to expand their Twitter interaction with their audience by sharing memes about their own shows and creating polls and questionaries about their services. 
 
 ## Objective
@@ -9,3 +10,21 @@ We look forward to analyze data and running models in order to understand why ar
 
 ## Obtaining Data
 The first step was to get access to Twitter API and then get our keys in order to create a code that could constantly pull out data from Twitter within the past 7 days from the code beign ran. Afterwards, we were able to clean the data. Since is a trending topic, the tweets have too many @ and # that maybe won't be helpful on our analysis, therefore we needed to filter our data in order to find just the tweets that would be helpful for our analysis. Finally, we will extract the show ‘s names to analyze the sentiment of each show and the overall polarity on the different opinions. We searched for keyphrases like #SelenaNetflix, #Selena, #BigMouth, #BigMouthNetflix, #VirginRiver, #PeppermintNetflix, #TheCrown, #TheCrownNetflix, #TheQueensGambit, #TheQueensGambitNetflix, #Marauders, #AlienWorld, #TheChristmasChronicles, and #TheGrinch. We also looked focused to look at more general tweets to make sure we gathered tweets about the shows beign watched from the platform we are interested in, like #Netflix, #NetflixShows #NetflixOriginals, #NetflixandChill, #QuarantineandChill and analyze if the tweets obtained are positively or negatively related to Netflix.
+
+## Step By Step
+- We started by pulling data from the latest 7 days of Twitter activity. nLooking for tweets that mentioned netflix and the top 10 shows on the platform. 
+*Top 10 shows Saturday, Dec 5th, 2020: 
+1. Selena
+2. Big Mouth
+3. Virgin River 
+4. Peppermint
+5. Marauders 
+6. Queens Gambit 
+7. The Christmas Chronicles
+8. Alien Worlds 
+9. The Crown 
+10. The Grinch
+
+- Saving the data in CSV files, we needed a backup in case we had a problem.
+- Text and sentiment analysis using Voson package
+- Models: Logistic Regression, Logistic Model, Probabilities and Accuracy,CTree,CART, Naive Bayes, Time Series, ARIMA.
