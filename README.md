@@ -49,12 +49,12 @@ For uncovering patterns and trends, make predictions and test our hypothesis, th
 * Time Series
 * ARIMA
 
-# Text Sentiment
-- Text and sentiment analysis using Voson package
+- We also used a packahe called Syuzhet to do a sentiment analysis to have a better understanding at users emotions when tweeting about Netflix's top 10 shows, which resulted in the following: 
+* Negative was the sentiment with highest score with more than 1500. 
+* The second highest sentiment was positivism with a score less than 1500 but almost.
+* The lowest sentiment was surprise with a score of less than 500.
 
-# Logistic Model
-## Logistic Regression
-In this analysis, we will classify Top 5 and Bottom 5 tweets shows using logistic regression.
-* Question: Given a Favorite Count and Number of followers, classify a tweet to be part of the Top 5 or the Bottom 5 shows, considering the Top10 of saturday 5th:
-
-#
+# Contributors for this Project
+* Andrea Gonzalez
+* Lilia Restrepo
+* Taytumn Schlegel
